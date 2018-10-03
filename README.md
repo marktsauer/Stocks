@@ -1,7 +1,7 @@
 # Stocks
 Pipeline
 1. Initial build 
-    a. pull stock data from API
+ /n   a. pull stock data from API
     b. calculate slope of stock data
     c. calculate when to buy/sell
     d. create test that "buys/sells" and shows what my return would be
