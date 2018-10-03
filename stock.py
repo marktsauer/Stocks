@@ -5,6 +5,7 @@ apikey = 'MLQIDKUU3X5BCPGD'
 symbol = 'SPY'
 interval = '1min'
 
+#gets stock data in json format
 def callStock():
     URL = "https://www.alphavantage.co/query"
     # defining a params dict for the parameters to be sent to the API
@@ -18,11 +19,12 @@ def callStock():
 
 #callStock()
 
-p1 = [1,2]
-p2 = [4,7]
+#getsthe slope between 2 points
 
-def calculateSlope():
+def calculateSlope(p1, p2):
     m = (p2[1] - p1[1]) / (p2[0] - p1[0])
     print(m)
 
-calculateSlope()
+p1 = [1,2]
+p2 = [5,7]
+calculateSlope(p1, p2)
