@@ -16,4 +16,13 @@ def callStock():
     #data = r.json()
     print(data)
 
-callStock()
+#callStock()
+
+p1 = [1,2]
+p2 = [4,7]
+
+def calculateSlope():
+    m = (p2[1] - p1[1]) / (p2[0] - p1[0])
+    print(m)
+
+calculateSlope()
