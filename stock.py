@@ -51,3 +51,10 @@ today = datetime.datetime.today().replace(second=0).replace(microsecond=0)
 # p1 = [1,2]
 # p2 = [5,7]
 # calculateSlope(p1, p2)
+
+
+
+#changes date format from 2018-10-03 to 20181003
+# conApiDate = apiDate.strftime('%Y%m%d') 
+#print(apiDate)
+#print(conApiDate)
