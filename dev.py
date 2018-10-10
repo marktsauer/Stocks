@@ -9,7 +9,7 @@ import os
 startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01-01 00:00:00 #use as base time to calculate against all other time
 one_day = datetime.timedelta(days=1)
 one_minute = datetime.timedelta(minutes=1)
-today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
+today = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day # 2018-10-05 10:06:00
 
 #converts datetime format to short date: 20181005
 def shortDate(longDate):
@@ -42,9 +42,10 @@ j = callIEXStock(date, symbol)
 def maintainDB():
     dbPath = "/Users/marksauer/Documents/GitHub/Stocks/data/" + symbol + "/"
     ext = ".json"
-    f = open(dbPath+date+ext,"a+")
+    f = dbPath+date+ext
     count = len(j)
     i = 0
+    data = []
     while i < count:
         #get data from API - type str
         d = j[i]['date']            # 20181005
@@ -62,10 +63,19 @@ def maintainDB():
 
         #calculate APIdateTime in minutes
         tDelta = (APIdateTime - startTime).total_seconds() # 6852 days, 9:30:00
-
-        f.write(str(APIdateTime) + ',' + str(tDelta) + ',' + str(p) + '\n')
+        
+        jsonStructure = {
+            'dateTime': str(APIdateTime),
+            'seconds' : str(tDelta),
+            'price'   : str(p)
+        }
+        data.append(jsonStructure)
+        # f.write(str(APIdateTime) + ',' + str(tDelta) + ',' + str(p) + '\n')
         i += 1
-    f.close()
+    print(json.dumps(data))
+    with open(f, 'w', newline='\n') as outfile:
+        json.dump(data, outfile)
+    # f.close()
 
 maintainDB()
 
