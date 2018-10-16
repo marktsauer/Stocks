@@ -5,6 +5,8 @@ import time
 from datetime import timedelta
 import os
 
+dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/'
+
 #Time periods in datetime format that you can perform actions on such as today - one_day
 startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01-01 00:00:00 #use as base time to calculate against all other time
 one_day = datetime.timedelta(days=1)
@@ -17,10 +19,6 @@ def shortDate(longDate):
     return(shortDate)
 
 
-days = 90
-date = shortDate(today)
-symbol = 'SPY'
-
 #calls API
 def callIEXStock(date, symbol):
     URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/chart/date/" + date
@@ -29,22 +27,35 @@ def callIEXStock(date, symbol):
     # sending get request and saving the response as response object
     r = requests.get(url=URL)#, params=PARAMS)
     # extracting data in json format
-    #data = json.loads(r.text)
-    data = r.json()
-    return(data)
+    data = json.loads(r.text)
+    #data = r.json()
+    listData = []
+    for r in data:
+        try:
+            jsonStructure = {
+                'date': r['date'],
+                'minute' : r['minute'],
+                'open'   : r['open']
+            }
+            listData.append(jsonStructure)
+        except KeyError: pass
+    return(listData)
 
 
-j = callIEXStock(date, symbol)
 
 
-#Database maintainance
-
-def maintainDB():
-    dbPath = "/Users/marksauer/Documents/GitHub/Stocks/data/" + symbol + "/"
+#Puts a days worth of stock data in a document
+def maintainDB(date, symbol): #takes 20181005 format
+    j = callIEXStock(date, symbol)
+    dbPath = dataDir + symbol + "/"
+    if not os.path.exists(dbPath):
+        os.makedirs(dbPath)
+    
     ext = ".json"
-    f = open(dbPath+date+ext,"a+")
+    f = dbPath+date+ext
     count = len(j)
     i = 0
+    data = []
     while i < count:
         #get data from API - type str
         d = j[i]['date']            # 20181005
@@ -62,11 +73,27 @@ def maintainDB():
 
         #calculate APIdateTime in minutes
         tDelta = (APIdateTime - startTime).total_seconds() # 6852 days, 9:30:00
-
-        f.write(str(APIdateTime) + ',' + str(tDelta) + ',' + str(p) + '\n')
+        
+        jsonStructure = {
+            'dateTime': str(APIdateTime),
+            'seconds' : str(tDelta),
+            'price'   : str(p)
+        }
+        data.append(jsonStructure)
         i += 1
-    f.close()
+    with open(f, 'w', newline='\n') as outfile:
+        json.dump(data, outfile)
 
-maintainDB()
 
 
+#loops the 
+def getMultiDays(days, symbol):
+    i = days
+    while i >= 0:
+        one_day = datetime.timedelta(days=i)
+        today = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
+        d = shortDate(today)
+        maintainDB(d, symbol)
+        i = i - 1
+
+getMultiDays(2, 'SPY')
