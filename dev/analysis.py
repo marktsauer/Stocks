@@ -73,7 +73,6 @@ for i in range(tot):
     Ey2 = Ey2 + y2
 # print(Ey2) # 40022
 
-
 #get (x - Mx)2
 xMx2 = 0
 for i in range(tot):
@@ -88,8 +87,6 @@ for i in range(tot):
     yMy2 = yMy2 + ymy
 # print(yMy2) # 1206.10
 
-
-
 #get pearson coorelation coefficient
 def r():
 
@@ -99,14 +96,12 @@ def r():
     r = rt / rb
     return(r) # 0.5298089018901743628197856966
 
-
 #find slope
 def b():
     Sx = math.sqrt(xMx2 / (tot - 1))
     Sy = math.sqrt(yMy2 / (tot - 1))
     b = r() * decimal.Decimal((Sy / Sx))
     return(b)
-
 
 #find y intercept
 def a():
