@@ -96,4 +96,4 @@ def getMultiDays(days, symbol):
         maintainDB(d, symbol)
         i = i - 1
 
-getMultiDays(2, 'SPY')
+getMultiDays(0, 'SPY')
