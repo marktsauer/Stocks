@@ -103,4 +103,3 @@ def getMultiDays(days, symbol):
 
 getMultiDays(2, 'SPY')
 #build in a way to delete days older than x days
-#build in a way to only create a new file if it is today

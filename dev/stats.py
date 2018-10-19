@@ -20,14 +20,13 @@ for i in files:
         jlen = len(j)
         # print(jlen)
     for p in range(jlen):
-        # print(p)
         jsonStructure = {
-                # 'dateTime' : j[p]['dateTime'],
                 'x' : j[p]['minutes'],
                 'y'   : j[p]['price']
             }
         data.append(jsonStructure)
-
+        
+print(data)
 
 # print(tot)
 tot = len(data)
@@ -114,7 +113,7 @@ def slr(x):
     y = a() + (b() * x)
     print(y)
 
-slr(39)
+slr(60)
 
 
 
