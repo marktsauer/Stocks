@@ -18,7 +18,6 @@ for i in files:
     with open(i) as f:
         j = json.load(f)
         jlen = len(j)
-        # print(jlen)
     for p in range(jlen):
         jsonStructure = {
                 'x' : j[p]['minutes'],
@@ -28,7 +27,6 @@ for i in files:
         
 print(data)
 
-# print(tot)
 tot = len(data)
 
 #get sum of x
