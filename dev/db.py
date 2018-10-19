@@ -12,7 +12,7 @@ startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01
 one_day = datetime.timedelta(days=1)
 one_minute = datetime.timedelta(minutes=1)
 today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
-smd = 390 #minutes in the stock market day
+smday = 390 #minutes in the stock market day
 
 #converts datetime format to short date: 20181005
 def shortDate(longDate):
@@ -54,7 +54,7 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
     
     ext = ".json"
     f = dbPath+date+ext
-    keyCount = dayCount * smd
+    keyCount = dayCount * smday
     count = len(j)
     i = 0
     data = []
@@ -98,18 +98,38 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
 
 
 # creates multiple days data at once and deletes days older than days specified
+# def getMultiDays(days, symbol):
+#     i = days
+#     p = days
+#     while i >= 0:
+#         p = p - i
+#         one_day = datetime.timedelta(days=i)
+#         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
+#         d = shortDate(date)
+#         maintainDB(d, symbol, p)
+#         i = i - 1
+#         p = days
+
+
+
 def getMultiDays(days, symbol):
-    i = days
-    p = days
+    i = days # to increment through days
+    p = days # to set a base day to increment i off of
+    a = days # to skip weekends
     while i >= 0:
-        p = p - i
+        p = p - a
         one_day = datetime.timedelta(days=i)
         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
         d = shortDate(date)
-        maintainDB(d, symbol, p)
-        i = i - 1
+        weekno = (date).weekday()
+        if weekno < 5:
+            maintainDB(d, symbol, p)
+            a = a - 1
         p = days
+        i = i - 1
+        
+
     
 
-getMultiDays(30, 'SPY')
+getMultiDays(14, 'SPY')
 #build in a way to delete days older than x days

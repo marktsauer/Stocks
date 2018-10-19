@@ -111,9 +111,9 @@ def a():
 #simple linear regression formula # this will give you a point in the y-axis(price) given a point on the x-axis(time)
 def slr(x):
     y = a() + (b() * x)
-    print(y)
+    return(y)
 
-slr(11872)
+# slr(11872)
 
 
 
