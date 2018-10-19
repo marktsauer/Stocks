@@ -20,14 +20,15 @@ for i in files:
         jlen = len(j)
     for p in range(jlen):
         jsonStructure = {
-                'x' : j[p]['minutes'],
+                # 'x' : j[p]['minutes'],
+                'x' : j[p]['key'],
                 'y'   : j[p]['price']
             }
         print(jsonStructure)
         data.append(jsonStructure)
         
         
-print(data)
+# print(data)
 
 tot = len(data)
 

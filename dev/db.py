@@ -12,6 +12,7 @@ startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01
 one_day = datetime.timedelta(days=1)
 one_minute = datetime.timedelta(minutes=1)
 today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
+smd = 390 #minutes in the stock market day
 
 #converts datetime format to short date: 20181005
 def shortDate(longDate):
@@ -45,7 +46,7 @@ def callIEXStock(date, symbol):
 
 
 #Puts a days worth of stock data in a document
-def maintainDB(date, symbol): #takes 20181005 format
+def maintainDB(date, symbol, dayCount): #takes 20181005 format
     j = callIEXStock(date, symbol)
     dbPath = dataDir + symbol + "/"
     if not os.path.exists(dbPath):
@@ -53,7 +54,7 @@ def maintainDB(date, symbol): #takes 20181005 format
     
     ext = ".json"
     f = dbPath+date+ext
-    
+    keyCount = dayCount * smd
     count = len(j)
     i = 0
     data = []
@@ -77,8 +78,10 @@ def maintainDB(date, symbol): #takes 20181005 format
             #calculate APIdateTime in minutes
             tDelta = (APIdateTime - startTime).total_seconds() / 60# 592997400.0
             
+            key = keyCount + i
             #create new object with preferred format to put in database
             jsonStructure = {
+                'key'     : str(key),
                 'dateTime': str(APIdateTime),
                 'minutes' : str(tDelta),
                 'price'   : str(p)
@@ -93,13 +96,16 @@ def maintainDB(date, symbol): #takes 20181005 format
 # creates multiple days data at once and deletes days older than days specified
 def getMultiDays(days, symbol):
     i = days
+    p = days
     while i >= 0:
+        p = p - i
         one_day = datetime.timedelta(days=i)
         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
         d = shortDate(date)
-        maintainDB(d, symbol)
+        maintainDB(d, symbol, p)
         i = i - 1
+        p = days
     
 
-getMultiDays(2, 'SPY')
+getMultiDays(30, 'SPY')
 #build in a way to delete days older than x days
