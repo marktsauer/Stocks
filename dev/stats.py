@@ -24,7 +24,6 @@ for i in files:
                 'x' : j[p]['key'],
                 'y'   : j[p]['price']
             }
-        print(jsonStructure)
         data.append(jsonStructure)
         
         
@@ -114,7 +113,7 @@ def slr(x):
     y = a() + (b() * x)
     print(y)
 
-slr(60)
+slr(11872)
 
 
 

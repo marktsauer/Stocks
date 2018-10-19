@@ -21,5 +21,19 @@ def shortDate(longDate):
 # order files by date
 files = glob.glob(dataDir + "*.json")
 files.sort(key=os.path.getmtime)
-# print(files)
+print(files)
+for i in files:
+        print(os.path.getmtime(i))
 
+# print(dattime.datetime(time.time()))
+
+today = datetime.datetime.now().date()
+today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
+
+print(today.date())
+
+for file in os.listdir(dataDir):
+    filetime = datetime.datetime.fromtimestamp(os.path.getctime(dataDir + file))
+    print(filetime)
+    if filetime.date() == today.date():
+        print('true')

@@ -58,8 +58,12 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
     count = len(j)
     i = 0
     data = []
-    
-    if (not os.path.exists(f)) or (date == shortDate(today)): # only creates file if it does not exist
+    if os.path.exists(f):
+        filetime = datetime.datetime.fromtimestamp(os.path.getctime(f))
+    else:
+        filetime = today.date()
+    # only creates file if it does not exist/ or if its todays file / or if the file was last updated before today
+    if (not os.path.exists(f)) or (date == shortDate(today)) or (filetime.date() == today.date()):
         while i < count:
             #get data from API - type str
             d = j[i]['date']            # 20181005
