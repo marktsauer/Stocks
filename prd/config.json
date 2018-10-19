@@ -1,0 +1,11 @@
+// config.json
+
+    {
+    "dataDir": "/Users/marksauer/Documents/GitHub/Stocks/dev/data/"
+    }
+
+
+//***** to enable config file, add this code below to python file
+// #config file
+// with open('config.json', 'r') as f:
+//     config = json.load(f)
