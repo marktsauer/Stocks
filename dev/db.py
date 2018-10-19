@@ -21,6 +21,10 @@ def shortDate(longDate):
 
 
 #calls API
+
+#need to call this instead
+    # https://api.iextrading.com/1.0/stock/SPY/quote
+
 def callIEXStock(date, symbol):
     URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/chart/date/" + date
     # defining a params dict for the parameters to be sent to the API
