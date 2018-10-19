@@ -23,7 +23,7 @@ for i in files:
         # print(p)
         jsonStructure = {
                 # 'dateTime' : j[p]['dateTime'],
-                'x' : j[p]['seconds'],
+                'x' : j[p]['minutes'],
                 'y'   : j[p]['price']
             }
         data.append(jsonStructure)
@@ -108,14 +108,13 @@ def a():
     a = My - (b() * Mx)
     return(a)
 
-#say x is = 15
-x = 15
-#simple linear regression formula - I get y from this, but i need to get x
+
+#simple linear regression formula # this will give you a point in the y-axis(price) given a point on the x-axis(time)
 def slr(x):
     y = a() + (b() * x)
     print(y)
 
-slr(x)
+slr(39)
 
 
 

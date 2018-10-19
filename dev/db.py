@@ -35,7 +35,7 @@ def callIEXStock(date, symbol):
             jsonStructure = {
                 'date': r['date'],
                 'minute' : r['minute'],
-                'open'   : r['open']
+                'close'   : r['close']
             }
             listData.append(jsonStructure)
         except KeyError: pass
@@ -53,49 +53,54 @@ def maintainDB(date, symbol): #takes 20181005 format
     
     ext = ".json"
     f = dbPath+date+ext
+    
     count = len(j)
     i = 0
     data = []
-    while i < count:
-        #get data from API - type str
-        d = j[i]['date']            # 20181005
-        t = j[i]['minute'] + ':00'  # 09:30:00
-        p = j[i]['open']            # 289.685
-        #print(d,t,p)  # 20181005 09:30:00 289.685
+    
+    if (not os.path.exists(f)) or (date == shortDate(today)): # only creates file if it does not exist
+        while i < count:
+            #get data from API - type str
+            d = j[i]['date']            # 20181005
+            t = j[i]['minute'] + ':00'  # 09:30:00
+            p = j[i]['close']            # 289.685
+            #print(d,t,p)  # 20181005 09:30:00 289.685
 
-        #add hiphens to date
-        newDate = datetime.datetime.strptime(d,'%Y%m%d').strftime('%Y-%m-%d')
+            #add hiphens to date format
+            newDate = datetime.datetime.strptime(d,'%Y%m%d').strftime('%Y-%m-%d')
 
-        #convert API date and time to format that can be calculated in minutes
-        #add new formatted date with time
-        sDate = newDate + ' ' + t
-        APIdateTime = datetime.datetime.strptime(sDate,"%Y-%m-%d %H:%M:%S") # type: datetime.datetime format: 2018-10-05 09:30:00
+            #convert API date and time to format that can be calculated in minutes
+            #add new formatted date with time
+            sDate = newDate + ' ' + t
+            APIdateTime = datetime.datetime.strptime(sDate,"%Y-%m-%d %H:%M:%S") # type: datetime.datetime format: 2018-10-05 09:30:00
 
-        #calculate APIdateTime in minutes
-        tDelta = (APIdateTime - startTime).total_seconds() # 6852 days, 9:30:00
-        
-        jsonStructure = {
-            'dateTime': str(APIdateTime),
-            'seconds' : str(tDelta),
-            'price'   : str(p)
-        }
-        data.append(jsonStructure)
-        i += 1
-    with open(f, 'w', newline='\n') as outfile:
-        json.dump(data, outfile)
+            #calculate APIdateTime in minutes
+            tDelta = (APIdateTime - startTime).total_seconds() / 60# 592997400.0
+            
+            #create new object with preferred format to put in database
+            jsonStructure = {
+                'dateTime': str(APIdateTime),
+                'minutes' : str(tDelta),
+                'price'   : str(p)
+            }
+            data.append(jsonStructure)
+            i += 1
+        with open(f, 'w', newline='\n') as outfile:
+            json.dump(data, outfile)
 
 
 
-#loops the 
+# creates multiple days data at once and deletes days older than days specified
 def getMultiDays(days, symbol):
     i = days
     while i >= 0:
         one_day = datetime.timedelta(days=i)
-        today = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
-        d = shortDate(today)
+        date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
+        d = shortDate(date)
         maintainDB(d, symbol)
         i = i - 1
+    
 
-getMultiDays(0, 'SPY')
+getMultiDays(2, 'SPY')
 #build in a way to delete days older than x days
 #build in a way to only create a new file if it is today
