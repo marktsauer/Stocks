@@ -64,15 +64,25 @@ def getRealTimePrice(symbol):
 slrPrice = decimal.Decimal(slr(decimal.Decimal(currentDBPrice)))
 print(slrPrice)
 
+# get what the stock price currently is
 realTimePrice = decimal.Decimal((getRealTimePrice(symbol)[0]['iexRealtimePrice']))
 print(realTimePrice)
 
+# calculate percent deviation from slr line
 def getPercentDif(slrPrice, realTimePrice):
-    percentChange = ((slrPrice - realTimePrice) / slrPrice) * 100
+    percentChange = ((realTimePrice - slrPrice) / realTimePrice) * 100
     return(percentChange)
 
 print(getPercentDif(slrPrice, realTimePrice))
 
+
+#deviation buy sell limits
+s3 = 3.0
+s2 = 2.0
+s1 = 1.0
+b1 = -1.0
+b2 = -2.0
+b3 = -3.0
 
 
 

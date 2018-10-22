@@ -1,18 +1,12 @@
-import requests
+import requests  # works fine with Python 2.7.9 (not 3.4.+)
 import json
-import datetime
 import time
-from datetime import timedelta
-import os
-today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
-
-one_day = datetime.timedelta(days=1)
-weekno = (datetime.datetime.today() - one_day).weekday()
-print(datetime.datetime.today() - one_day)
-
-i = 0
-while i < 7:
-    one_day = datetime.timedelta(days=i)
-    weekno = (today - one_day).weekday()
-    print(weekno)
-    i += 1
+ 
+def fetchPreMarket(symbol, exchange):
+    link = "http://finance.google.com/finance/info?client=ig&q="
+    url = link+"%s:%s" % (exchange, symbol)
+    r = requests.get(url=url)
+    print(url)
+ 
+ 
+fetchPreMarket("SPY","NASDAQ")
