@@ -101,20 +101,6 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
 
 
 
-# creates multiple days data at once and deletes days older than days specified
-# def getMultiDays(days, symbol):
-#     i = days
-#     p = days
-#     while i >= 0:
-#         p = p - i
-#         one_day = datetime.timedelta(days=i)
-#         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
-#         d = shortDate(date)
-#         maintainDB(d, symbol, p)
-#         i = i - 1
-#         p = days
-
-
 
 def getMultiDays(days, symbol):
     i = days # to increment through days

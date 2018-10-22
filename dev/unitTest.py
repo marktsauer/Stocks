@@ -4,16 +4,42 @@ import datetime
 import time
 from datetime import timedelta
 import os
-# from stats import slr
+import glob
+from db import getMultiDays
+from stats import slr
+import decimal
 
+symbol = 'SPY'
+print(symbol)
+dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 bankAccountBalance = 25000
 
+#refresh data from db
+getMultiDays(9, symbol)
 
-# print(slr(4267))
+# order files by date
+files = glob.glob(dataDir + "*.json")
+files.sort(key=os.path.getmtime)
 
-#get current price
+#collect all data in one list
+data = []
+for i in files:
+    with open(i) as f:
+        j = json.load(f)
+        jlen = len(j)
+    for p in range(jlen):
+        jsonStructure = {
+                # 'x' : j[p]['minutes'],
+                'x' : j[p]['key'],
+                'y'   : j[p]['price']
+            }
+        data.append(jsonStructure)
 
-def getCurrentIEXStock(symbol):
+#get last x-axis item in db
+currentDBPrice = (data[-1]['x'])
+
+#get real time IEX price from quote API (more acurate)
+def getRealTimePrice(symbol):
     URL = "https://api.iextrading.com/1.0/stock/" + symbol + "/quote"
     # defining a params dict for the parameters to be sent to the API
     #PARAMS = {'symbols' : 'SPY'}
@@ -32,5 +58,21 @@ def getCurrentIEXStock(symbol):
     except KeyError: pass
     return(listData)
 
-(getCurrentIEXStock("SPY"))
+
+
+# get what the stock should be based on 
+slrPrice = decimal.Decimal(slr(decimal.Decimal(currentDBPrice)))
+print(slrPrice)
+
+realTimePrice = decimal.Decimal((getRealTimePrice(symbol)[0]['iexRealtimePrice']))
+print(realTimePrice)
+
+def getPercentDif(slrPrice, realTimePrice):
+    percentChange = ((slrPrice - realTimePrice) / slrPrice) * 100
+    return(percentChange)
+
+print(getPercentDif(slrPrice, realTimePrice))
+
+
+
 
