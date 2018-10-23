@@ -10,11 +10,25 @@ dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 files = glob.glob(dataDir + "*.json")
 files.sort(key=os.path.getmtime)
 
-print(len(files))
-#collect all data in one list
+# print(files[0])
+# #collect all data in one list
+# data = []
+# for i in files:
+#     with open(i) as f:
+#         j = json.load(f)
+#         jlen = len(j)
+#     for p in range(jlen):
+#         jsonStructure = {
+#                 # 'x' : j[p]['minutes'],
+#                 'x' : j[p]['key'],
+#                 'y'   : j[p]['price']
+#             }
+#         data.append(jsonStructure)
 data = []
-for i in files:
-    with open(i) as f:
+i = 0
+fRange = len(files)
+while i < fRange:
+    with open(files[i]) as f:
         j = json.load(f)
         jlen = len(j)
     for p in range(jlen):
@@ -23,9 +37,12 @@ for i in files:
                 'x' : j[p]['key'],
                 'y'   : j[p]['price']
             }
+        print(jsonStructure)
         data.append(jsonStructure)
+    i += 1
+
         
-        
+
 # print(data)
 
 tot = len(data)
