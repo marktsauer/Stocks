@@ -10,44 +10,55 @@ dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 files = glob.glob(dataDir + "*.json")
 files.sort(key=os.path.getmtime)
 
-print(len(files))
 #collect all data in one list
+# data = []
+# for i in files:
+#     with open(i) as f:
+#         j = json.load(f)
+#         jlen = len(j)
+#     for p in range(jlen):
+#         jsonStructure = {
+#                 # 'x' : j[p]['minutes'],
+#                 'x' : j[p]['key'],
+#                 'y'   : j[p]['price']
+#             }
+#         data.append(jsonStructure)
+        
+        
+# stage data
 data = []
-for i in files:
-    with open(i) as f:
-        j = json.load(f)
-        jlen = len(j)
-    for p in range(jlen):
-        jsonStructure = {
-                # 'x' : j[p]['minutes'],
-                'x' : j[p]['key'],
-                'y'   : j[p]['price']
-            }
-        data.append(jsonStructure)
-        
-        
-# print(data)
 
-tot = len(data)
+def getData(data):
+    return(data)
+
+def tot(data):
+    tot = len(getData(data))
+    return(tot)
 
 #get sum of x
-Ex = 0
-for i in range(tot):
-    Ex = decimal.Decimal(Ex) + decimal.Decimal((data[i]['x']))
+def Ex(tot, data):
+    Ex = 0
+    for i in range(tot):
+        Ex = decimal.Decimal(Ex) + decimal.Decimal((data[i]['x']))
 # print(Ex) # 247
 
 #get sum of y
-Ey = 0
-for i in range(tot):
-    Ey = decimal.Decimal(Ey) + decimal.Decimal((data[i]['y']))
+def Ey(tot, data):
+    Ey = 0
+    for i in range(tot):
+        Ey = decimal.Decimal(Ey) + decimal.Decimal((data[i]['y']))
 # print(Ey) # 486
 
 #get mean of x
-Mx = Ex / tot
+def Mx(tot, Ex):
+    Mx = Ex(tot) / tot
+    return(Mx)
 # print(Mx) # 15.6
 
 #get mean of x
-My = Ey / tot
+def My(Ey):
+    My = Ey(tot) / tot
+    return(My)
 # print(My) # 79.7
 
 #get sum of x*y in all rows
@@ -87,7 +98,6 @@ for i in range(tot):
 
 #get pearson coorelation coefficient
 def r():
-
     #find r from variables above
     rt = (tot * Exy) - (Ex * Ey)
     rb = decimal.Decimal(math.sqrt(((tot * Ex2) - (Ex * Ex)) * ((tot * Ey2) - (Ey * Ey))))
