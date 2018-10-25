@@ -2,7 +2,6 @@ import requests
 import json
 import datetime
 import time
-from datetime import timedelta
 import os
 import sys
 
@@ -120,16 +119,14 @@ def getMultiDays(days, symbol):
         i = i - 1
         
 
-    
-
-getMultiDays(1, 'SPY')
+# getMultiDays(1, 'SPY')
 #build in a way to delete days older than x days
 
 
 def dbCleanup(symbol):
     folder_path = dataDir + symbol + '/'
     file_ends_with = ".json"
-    how_many_days_old_logs_to_remove = 1
+    how_many_days_old_logs_to_remove = 0
 
     now = time.time()
 
@@ -142,4 +139,4 @@ def dbCleanup(symbol):
                 return("\n File Removed : " , file_full_path)
 
 
-dbCleanup('SPY')
+# dbCleanup('SPY')

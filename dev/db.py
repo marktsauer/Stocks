@@ -2,7 +2,6 @@ import requests
 import json
 import datetime
 import time
-from datetime import timedelta
 import os
 
 dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/'
@@ -121,5 +120,5 @@ def getMultiDays(days, symbol):
 
     
 
-# getMultiDays(9, 'SPY')
+getMultiDays(9, 'SPY')
 #build in a way to delete days older than x days

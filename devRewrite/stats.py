@@ -1,19 +1,18 @@
 import json
-# import os
-# import glob
 import math
 import decimal
 
+# import os
+# import glob
 # dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
-
 # # order files by date
 # files = glob.glob(dataDir + "*.json")
 # files.sort(key=os.path.getmtime)
-
-# # collect all data in one list
 # data = []
-# for i in files:
-#     with open(i) as f:
+# lenF = len(files)
+# i = 0
+# while i < lenF:
+#     with open(files[i]) as f:
 #         j = json.load(f)
 #         jlen = len(j)
 #     for p in range(jlen):
@@ -23,7 +22,11 @@ import decimal
 #                 'y'   : j[p]['price']
 #             }
 #         data.append(jsonStructure)
-        
+#     i += 1
+
+
+
+
 # simple linear regression formula 
 def getYint(data, x):
 
@@ -87,8 +90,7 @@ def getYint(data, x):
     
     return(y)
 
-
-# print(getYint(data, 41))
+# print(getYint(data, 31.0134543))
 
 
 
