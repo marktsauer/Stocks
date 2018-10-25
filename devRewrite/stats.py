@@ -1,31 +1,31 @@
 import json
-import os
-import glob
+# import os
+# import glob
 import math
 import decimal
 
-dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
+# dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 
-# order files by date
-files = glob.glob(dataDir + "*.json")
-files.sort(key=os.path.getmtime)
+# # order files by date
+# files = glob.glob(dataDir + "*.json")
+# files.sort(key=os.path.getmtime)
 
-# collect all data in one list
-data = []
-for i in files:
-    with open(i) as f:
-        j = json.load(f)
-        jlen = len(j)
-    for p in range(jlen):
-        jsonStructure = {
-                # 'x' : j[p]['minutes'],
-                'x' : j[p]['key'],
-                'y'   : j[p]['price']
-            }
-        data.append(jsonStructure)
+# # collect all data in one list
+# data = []
+# for i in files:
+#     with open(i) as f:
+#         j = json.load(f)
+#         jlen = len(j)
+#     for p in range(jlen):
+#         jsonStructure = {
+#                 # 'x' : j[p]['minutes'],
+#                 'x' : j[p]['key'],
+#                 'y'   : j[p]['price']
+#             }
+#         data.append(jsonStructure)
         
-        
-def getSLR(data, x):
+# simple linear regression formula 
+def getYint(data, x):
 
     tot = len(data) # get total number of (x,y) points in data
     
@@ -78,17 +78,17 @@ def getSLR(data, x):
     # slope (b)
     b = r * decimal.Decimal((Sy / Sx))
 
-    # y-intercept (a)
+    # y-intercept (a) based on slope
     a = My - (b * Mx)
 
-    # simple linear regression formula 
+   
     # given a point on the x-axis(time), this will give you a point in the y-axis(price) 
-    y = a + (b * x)
+    y = a + (b * decimal.Decimal(x))
     
-    return(tot, Ex, Ey, Mx, My, Exy,   y)
+    return(y)
 
 
-print(getSLR(data, 40))
+# print(getYint(data, 41))
 
 
 
