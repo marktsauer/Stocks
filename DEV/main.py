@@ -1,9 +1,9 @@
 from db import getMultiDays, dbCleanup
-from unitTest import unitTest
+from unitTest import buySell
 
 getMultiDays(9, 'SPY') # (days of data, symbol)
 dbCleanup('SPY') # (symbol)
 
-unitTest(3) #days to test
+buySell(3) #days to test
 
 

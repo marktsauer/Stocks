@@ -14,7 +14,7 @@ files.sort(key=os.path.getmtime)
 
 
 # get all but todays data
-def unitTest(daysToTest):
+def buySell(daysToTest):
     data = []
     lenF = len(files)
     i = 0
@@ -38,6 +38,7 @@ def unitTest(daysToTest):
             j = json.load(f)
             jlen = len(j)
             p = 0
+            currentPercent = 0
             while p < jlen:
                 jsonStructure = {
                     # 'x' : j[p]['minutes'],
@@ -47,8 +48,6 @@ def unitTest(daysToTest):
                 data.append(jsonStructure)
                 p += 1
 
-                tot = len(data)
-
                 #put calculaions, buys and sells in here 
                 currentDBtime = (data[-1]['x'])
                 currentDBPrice = decimal.Decimal(data[-1]['y'])
@@ -57,11 +56,12 @@ def unitTest(daysToTest):
                 yInt = getYint(data, currentDBtime) #replace with new API call getting real time price
                 percentDif = getPercentDif(yInt, currentDBPrice)
                 # print(yInt, currentDBPrice, percentDif)
-                if percentDif > 1.0:
-                    print(currentDBtime, currentDBPrice, percentDif)
-                elif percentDif < -1.0:
-                    print(currentDBtime,currentDBPrice, percentDif)
-                
+                if percentDif > 1.0 and currentPercent != 1:
+                    print(currentDBtime, yInt, currentDBPrice, percentDif)
+                    currentPercent = 1
+                elif percentDif < -1.0 and currentPercent != -1:
+                    print(currentDBtime, yInt, currentDBPrice, percentDif)
+                    currentPercent = -1
 
         i += 1
 
