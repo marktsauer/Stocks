@@ -5,23 +5,26 @@ import math
 from stats import getYint
 import decimal
 
+# variables
+daysToTest = 2
+
 dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 
 # order files by date
 files = glob.glob(dataDir + "*.json")
 files.sort(key=os.path.getmtime)
 
-
+# get percent dif between current price and y-int price
 def getPercentDif(getYint, currentDBPrice):
     percentChange = ((currentDBPrice - getYint) / currentDBPrice) * 100
     return(percentChange)
 
-# collect all data in one list
-#get all but todays file
+
+# get all but todays data
 data = []
 lenF = len(files)
 i = 0
-while i < lenF - 1:
+while i < lenF - daysToTest:
     with open(files[i]) as f:
         j = json.load(f)
         jlen = len(j)
@@ -61,11 +64,6 @@ while i < lenF:
             percentDif = getPercentDif(yInt, currentDBPrice)
             print(yInt, currentDBPrice, percentDif)
             
+
     i += 1
 
-
-# print(getYint(data, '32'))
-
-
-
-# print(getYint(data, 41))

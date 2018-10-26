@@ -119,7 +119,7 @@ def getMultiDays(days, symbol):
         i = i - 1
         
 
-getMultiDays(1, 'SPY')
+getMultiDays(4, 'SPY')
 #build in a way to delete days older than x days
 
 
