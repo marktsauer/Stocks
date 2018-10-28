@@ -4,15 +4,11 @@ import datetime
 import time
 import os
 import sys
+import glob
 
 dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/'
 
-#Time periods in datetime format that you can perform actions on such as today - one_day
-startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01-01 00:00:00 #use as base time to calculate against all other time
-one_day = datetime.timedelta(days=1)
-one_minute = datetime.timedelta(minutes=1)
-today = datetime.datetime.today().replace(second=0).replace(microsecond=0) # 2018-10-05 10:06:00
-smday = 390 #minutes in the stock market day
+
 
 #converts datetime format to short date: 20181005
 def shortDate(longDate):
@@ -50,15 +46,14 @@ def callIEXStock(date, symbol):
 
 
 #Puts a days worth of stock data in a document
-def maintainDB(date, symbol, dayCount): #takes 20181005 format
+def maintainDB(date, symbol, dayCount, today): #takes 20181005 format
     j = callIEXStock(date, symbol)
     dbPath = dataDir + symbol + "/"
     if not os.path.exists(dbPath):
         os.makedirs(dbPath)
-
     ext = ".json"
     f = dbPath+date+ext
-    keyCount = dayCount * smday
+    keyCount = dayCount * 390
     count = len(j)
     i = 0
     data = []
@@ -84,6 +79,7 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
             APIdateTime = datetime.datetime.strptime(sDate,"%Y-%m-%d %H:%M:%S") # type: datetime.datetime format: 2018-10-05 09:30:00
 
             #calculate APIdateTime in minutes
+            startTime = datetime.datetime(2000,1,1) #type- datetime.datetime format- 2000-01-01 00:00:00 #use as base time to calculate against all other time
             tDelta = (APIdateTime - startTime).total_seconds() / 60# 592997400.0
             
             key = keyCount + i
@@ -102,7 +98,7 @@ def maintainDB(date, symbol, dayCount): #takes 20181005 format
 
 
 
-def getMultiDays(days, symbol):
+def getMultiDays(days, symbol, today):
     i = days # to increment through days
     p = days # to set a base day to increment i off of
     a = days # to skip weekends
@@ -113,30 +109,35 @@ def getMultiDays(days, symbol):
         d = shortDate(date)
         weekno = (date).weekday()
         if weekno < 5:
-            maintainDB(d, symbol, p)
+            maintainDB(d, symbol, p, today)
             a = a - 1
         p = days
         i = i - 1
         
 
 # getMultiDays(4, 'SPY')
-#build in a way to delete days older than x days
 
 
-def dbCleanup(symbol):
+def dbCleanup(symbol, filesToKeep):
     folder_path = dataDir + symbol + '/'
     file_ends_with = ".json"
-    how_many_days_old_logs_to_remove = 0
 
-    now = time.time()
+    midnight = datetime.datetime.combine(datetime.datetime.today(), datetime.time.min)
+    files = glob.glob(folder_path + "*.json")
+    files.sort(key=os.path.getmtime)
+    
+    i = 0
 
-    for file in os.listdir(folder_path):
-        file_full_path = os.path.join(folder_path,file)
-        if os.path.isfile(file_full_path) and file.endswith(file_ends_with):
-            #Delete files older than x days
-            if os.stat(file_full_path).st_mtime < now - how_many_days_old_logs_to_remove * 86400: 
-                os.remove(file_full_path)
-                return("\n File Removed : " , file_full_path)
+    while i < len(files) - filesToKeep:
+        if os.path.isfile(files[i]) and files[i].endswith(file_ends_with):
+            created = datetime.datetime.fromtimestamp(os.stat(files[i]).st_ctime)
+            if created < midnight: 
+                os.remove(files[i])
+                print('file created date:',files[i])
+        if os.path.isfile(files[i]) and files[i].endswith(file_ends_with):
+            print(files[i])
+            os.remove(files[i])
 
+        i += 1
 
 # dbCleanup('SPY')
