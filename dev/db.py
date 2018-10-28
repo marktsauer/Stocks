@@ -106,6 +106,7 @@ def getMultiDays(days, symbol, today):
         p = p - a
         one_day = datetime.timedelta(days=i)
         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
+        
         d = shortDate(date)
         weekno = (date).weekday()
         if weekno < 5:
