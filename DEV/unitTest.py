@@ -6,15 +6,14 @@ from stats import getYint, getPercentDif
 import decimal
 
 
-dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
+# dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/SPY/'
 
 
 # get all but todays data
-def buySell(daysToTest):
+def buySell(daysToTest, bankBalance, shares, symbol):
+    dataDir = os.path.dirname(os.path.realpath(__file__)) + '/data/' + symbol +'/'
     files = glob.glob(dataDir + "*.json")
     files.sort(key=os.path.getmtime)
-    bankBalance = 25000
-    shares = 10
     data = []
     lenF = len(files)
     i = 0
@@ -31,12 +30,13 @@ def buySell(daysToTest):
             data.append(jsonStructure)
         i += 1
 
+
     currentDBPrice = decimal.Decimal(data[-1]['y'])
     percentCounter = 0
     shareValue = shares * currentDBPrice
     totalMoney = bankBalance + shareValue
-    print('STARTING AT:', totalMoney)
-    print(bankBalance, shareValue, shares, currentDBPrice)
+
+
 
 
     #to iterate through one day testing after every minute
@@ -64,30 +64,48 @@ def buySell(daysToTest):
                 percentDif = getPercentDif(yInt, currentDBPrice)
                 # print( percentDif)
 
-                if (.5 <= percentDif <= 10.5) and percentCounter != 1:
+                increment = .1
+
+                if ((2 * increment) <= percentDif <= 10.5) and percentCounter != 2:
+                    percentCounter = 2
+                    bankBalance = bankBalance + (currentDBPrice * 2)
+                    shares = shares - 2
+                    shareValue = shares * currentDBPrice
+                    # print(bankBalance,shares,shareValue,currentDBtime, yInt, currentDBPrice, percentDif, percentCounter)
+
+                if ((1 * increment) <= percentDif <= (2 * increment)) and percentCounter != 1:
                     percentCounter = 1
                     bankBalance = bankBalance + currentDBPrice
                     shares = shares - 1
                     shareValue = shares * currentDBPrice
                     # print(bankBalance,shares,shareValue,currentDBtime, yInt, currentDBPrice, percentDif, percentCounter)
 
-                elif (-.4999 <= percentDif <= .4999) and percentCounter != 0:
+                elif ((-1 * increment) <= percentDif <= (1 * increment)) and percentCounter != 0:
                     percentCounter = 0
                     # print(bankBalance,shares,shareValue,currentDBtime, yInt, currentDBPrice, percentDif, percentCounter)
-                
-                elif (-.5 >= percentDif >= -10.5) and percentCounter != -1:
+
+                elif ((-1 * increment) >= percentDif >= (-2 * increment)) and percentCounter != -1:
                     percentCounter = -1
                     bankBalance = bankBalance - currentDBPrice
                     shares = shares + 1
                     shareValue = shares * currentDBPrice
                     # print(bankBalance,shares,shareValue,currentDBtime, yInt, currentDBPrice, percentDif, percentCounter)
+                
+                elif ((-2 * increment) >= percentDif >= -10.5) and percentCounter != -2:
+                    percentCounter = -2
+                    bankBalance = bankBalance - (currentDBPrice * 2)
+                    shares = shares + 2
+                    shareValue = shares * currentDBPrice
+                    # print(bankBalance,shares,shareValue,currentDBtime, yInt, currentDBPrice, percentDif, percentCounter)
 
         i += 1
 
-    currentDBPrice = decimal.Decimal(data[-1]['y'])
-    percentCounter = 0
-    shareValue = shares * currentDBPrice
-    totalMoney = bankBalance + shareValue
-    print('ENDING AT:', totalMoney)
-    print(bankBalance, shareValue, shares, currentDBPrice)
+        currentDBPrice = decimal.Decimal(data[-1]['y'])
+        percentCounter = 0
+        shareValue = shares * currentDBPrice
+        totalMoney = bankBalance + shareValue
+    # print('ENDING AT:', totalMoney)
+    # print(bankBalance, shareValue, shares, currentDBPrice)
+
+    return(totalMoney, bankBalance, shareValue, shares, currentDBPrice)
 

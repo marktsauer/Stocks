@@ -106,11 +106,11 @@ def getMultiDays(days, symbol, today):
         p = p - a
         one_day = datetime.timedelta(days=i)
         date = datetime.datetime.today().replace(second=0).replace(microsecond=0) - one_day
-        
+        date = today - one_day
         d = shortDate(date)
         weekno = (date).weekday()
         if weekno < 5:
-            maintainDB(d, symbol, p, today)
+            maintainDB(d, symbol, p, date)
             a = a - 1
         p = days
         i = i - 1
@@ -134,9 +134,9 @@ def dbCleanup(symbol, filesToKeep):
             created = datetime.datetime.fromtimestamp(os.stat(files[i]).st_ctime)
             if created < midnight: 
                 os.remove(files[i])
-                print('file created date:',files[i])
+                # print('file created date:',files[i])
         if os.path.isfile(files[i]) and files[i].endswith(file_ends_with):
-            print(files[i])
+            # print(files[i])
             os.remove(files[i])
 
         i += 1
